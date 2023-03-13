@@ -1,4 +1,4 @@
-name: Build GraphMLIR CI
+name: Build GraphMLIR
 
 on: [push, pull_request]
 
@@ -12,24 +12,29 @@ jobs:
         with:
           submodules: true
 
+      - name: Get LLVM submodule commit hash
+        run: |
+          LLVM_COMMIT_HASH=$(git rev-parse HEAD:llvm)
+          echo "LLVM_COMMIT_HASH=$LLVM_COMMIT_HASH" >> $GITHUB_ENV
+
       - name: Build CMake and Ninja
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
+
+      - name: Cache LLVM
+        uses: actions/cache@v3
+        id: cache
+        with:
+          key: "llvm-${{ env.LLVM_COMMIT_HASH }}"
+          path: ${{ github.workspace }}/llvm/
+          restore-keys: llvm-
+
       - name: Build LLVM
+        if: steps.restore-cache.outputs.cache-hit != 'true'
         run: ./.github/scripts/build-llvm.sh
         shell: bash
 
       - name: Build project
         run: ./.github/scripts/build-project.sh
         shell: bash
-
-      - name: Get LLVM submodule commit hash
-        run: |
-          LLVM_COMMIT_HASH=$(git rev-parse HEAD:llvm)
-          echo "LLVM_COMMIT_HASH=$LLVM_COMMIT_HASH" >> $GITHUB_ENV
-      - name: Cache LLVM
-        uses: actions/cache@v3
-        with:
-          key: "llvm-${{ env.LLVM_COMMIT_HASH }}"
-          path: ./llvm
