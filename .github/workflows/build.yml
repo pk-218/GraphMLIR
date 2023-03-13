@@ -24,7 +24,7 @@ jobs:
 
       - name: Cache LLVM
         uses: actions/cache@v3
-        id: cache
+        id: restore-cache
         with:
           key: "llvm-${{ env.LLVM_COMMIT_HASH }}"
           path: ${{ github.workspace }}/llvm/
