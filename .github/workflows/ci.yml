@@ -1,0 +1,35 @@
+name: Build GraphMLIR CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GraphMLIR GitHub repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Build CMake and Ninja
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
+      - name: Build LLVM
+        run: ./.github/scripts/build-llvm.sh
+        shell: bash
+
+      - name: Build project
+        run: ./.github/scripts/build-project.sh
+        shell: bash
+
+      - name: Get LLVM submodule commit hash
+        run: |
+          LLVM_COMMIT_HASH=$(git rev-parse HEAD:llvm)
+          echo "LLVM_COMMIT_HASH=$LLVM_COMMIT_HASH" >> $GITHUB_ENV
+      - name: Cache LLVM
+        uses: actions/cache@v3
+        with:
+          key: "llvm-${{ env.LLVM_COMMIT_HASH }}"
+          path: ./llvm
