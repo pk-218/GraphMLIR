@@ -24,21 +24,21 @@
 #include <benchmark/benchmark.h>
 #include <Utility/Utils.h>
 
-#define V 10
+#define VERTICES 10
 #define MAX_WEIGHT 1000
 
 using namespace std;
 
 namespace {
-Graph<int, 2> g(graph::detail::GRAPH_ADJ_MATRIX_UNDIRECTED_WEIGHTED, V);
+Graph<int, 2> g(graph::detail::GRAPH_ADJ_MATRIX_UNDIRECTED_WEIGHTED, VERTICES);
 MemRef<int, 2> *input;
 intptr_t size[1];
 } // namespace
 
 void initializeGraphMlirMinSpanningTree() {
-  graph::generateRandomGraphI(&g, V);
+  graph::generateRandomGraphI(&g, VERTICES);
   input = &g.get_Memref();
-  size[0] = V;
+  size[0] = VERTICES;
 
   MemRef<int, 1> cost = MemRef<int, 1>(size, MAX_WEIGHT);
   MemRef<int, 1> visited = MemRef<int, 1>(size, 0);
@@ -71,7 +71,7 @@ void generateResultGraphMlirMinSpanningTree() {
   graph::min_spanning_tree(input, &output, &visited, &cost);
 
   auto parent = output.getData();
-  for (int i = 0; i < V; i++) {
+  for (int i = 0; i < VERTICES; i++) {
     std::cout << "p[" << i << "] = " << parent[i] << ", ";
   }
 

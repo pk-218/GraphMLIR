@@ -24,19 +24,19 @@
 
 using namespace std;
 
-#define V 10
+#define VERTICES 10
 # define INF 1000
 
 namespace {
-int input[V][V];
-int output[V];
+int input[VERTICES][VERTICES];
+int output[VERTICES];
 } // namespace
 
-void minSpanningTree(int graph[][V], int parent[V]) {
-    float key[V];
-    bool visited[V];
+void minSpanningTree(int graph[][VERTICES], int parent[VERTICES]) {
+    float key[VERTICES];
+    bool visited[VERTICES];
 
-    for (int i = 0; i < V; i++) {
+    for (int i = 0; i < VERTICES; i++) {
         key[i] = INF;
         visited[i] = false;
     }
@@ -44,11 +44,11 @@ void minSpanningTree(int graph[][V], int parent[V]) {
     key[0] = 0;
     parent[0] = 0;
 
-    for (int count = 0; count < V-1; count++) {
+    for (int count = 0; count < VERTICES-1; count++) {
         int min_index = -1;
         float min_cost = INF;
         int min_index_temp = -1;
-        for (int i = 0; i < V; i++) {
+        for (int i = 0; i < VERTICES; i++) {
             min_index_temp = min_index;
             if (visited[i] == false && key[i] < min_cost) {
                 min_cost = key[i];
@@ -60,7 +60,7 @@ void minSpanningTree(int graph[][V], int parent[V]) {
         }
         visited[min_index] = true;
 
-        for (int v = 0; v < V; v++) {
+        for (int v = 0; v < VERTICES; v++) {
             if (graph[min_index][v] && visited[v] == false && graph[min_index][v] < key[v]) {
                 parent[v] = min_index;
                 key[v] = graph[min_index][v];
@@ -70,10 +70,10 @@ void minSpanningTree(int graph[][V], int parent[V]) {
 }
 
 void initializeMinSpanningTree() {
-  int MAX_EDGES = V * (V - 1) / 2;
+  int MAX_EDGES = VERTICES * (VERTICES - 1) / 2;
   for (int i = 0; i < MAX_EDGES; i++) {
-    int u = rand() % V;
-    int v = rand() % V;
+    int u = rand() % VERTICES;
+    int v = rand() % VERTICES;
     int d = rand() % 1000;
     input[u][v] = d;
   }
@@ -99,7 +99,7 @@ void generateResultMinSpanningTree() {
 
     minSpanningTree(input, output);
 
-    for (int i = 0; i < V; i++) {
+    for (int i = 0; i < VERTICES; i++) {
         std::cout << "p[" << i << "] = " << output[i] << ", ";
     }
     std::cout << "\nMinimum Spanning Tree operation finished!\n";

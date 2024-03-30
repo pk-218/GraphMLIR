@@ -27,10 +27,8 @@
 using namespace std;
 using namespace lemon;
 
-#define V 10
-#define MaxWeight 1000
-#define UpperLimit 100
-#define LowerLimit 2
+#define VERTICES 10
+#define MAX_WEIGHT 1000
 
 typedef ListGraph::Node Node;
 typedef ListGraph::Edge Edge;
@@ -40,39 +38,37 @@ typedef ListGraph::EdgeMap<int> ECostMap;
 
 namespace {
 ListGraph g;
-ListGraph::Node nodes[V];
+ListGraph::Node nodes[VERTICES];
 ECostMap edge_cost_map(g);
 } // namespace
 
 void initializeLemonMinSpanningTree() {
-  for (int i = 0; i < V; i++) {
+  for (int i = 0; i < VERTICES; i++) {
     nodes[i] = g.addNode();
   }
   std::set<std::pair<int, int>> container;
   std::set<std::pair<int, int>>::iterator it;
   srand(time(NULL));
 
-  int NUM = V; // Number of Vertices
-  int MAX_EDGES = V * (V - 1) / 2;
-  int NUMEDGE = MAX_EDGES; // Number of Edges
-  for (int j = 1; j <= NUMEDGE; j++) {
-    int a = rand() % NUM;
-    int b = rand() % NUM;
+  int edges = VERTICES * (VERTICES - 1) / 2;
+  for (int j = 1; j <= edges; j++) {
+    int a = rand() % VERTICES;
+    int b = rand() % VERTICES;
 
     std::pair<int, int> p = std::make_pair(a, b);
     std::pair<int, int> reverse_p = std::make_pair(b, a);
 
     while (container.find(p) != container.end() ||
            container.find(reverse_p) != container.end() || a==b) {
-      a = rand() % NUM;
-      b = rand() % NUM;
+      a = rand() % VERTICES;
+      b = rand() % VERTICES;
       p = std::make_pair(a, b);
       reverse_p = std::make_pair(b, a);
     }
 
     container.insert(p);
     container.insert(reverse_p);
-    edge_cost_map.set(g.addEdge(nodes[a], nodes[b]), 1 + rand() % MaxWeight);
+    edge_cost_map.set(g.addEdge(nodes[a], nodes[b]), 1 + rand() % MAX_WEIGHT);
   }
 }
 

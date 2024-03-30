@@ -27,7 +27,7 @@
 #include <vector>
 #include <Utility/Utils.h>
 
-#define V 10
+#define VERTICES 10
 #define MAX_WEIGHT 1000
 
 using namespace std;
@@ -47,8 +47,8 @@ Graph g;
 
 void initializeBoostMinSpanningTree() {
 
-  const int vertices = V;
-  int num_edges = V * (V -1) / 2;
+  const int vertices = VERTICES;
+  int num_edges = VERTICES * (VERTICES - 1) / 2;
 
   std::vector<int> edges;
   std::vector<int> weight;
